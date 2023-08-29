@@ -1,0 +1,22 @@
+{
+  "name": "git-user-details-api",
+  "version": "1.0.0",
+  "description": "A bootcamp capstone task that uses Full Stack React &amp; Express to get user details via the GitHub API and display it accordingly",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.20.2",
+    "nodemon": "3.0.1",
+    "octokit": "3.1.0"
+  },
+  "devDependencies": {
+    "chai": "4.3.8",
+    "mocha": "10.2.0"
+  }
+}
