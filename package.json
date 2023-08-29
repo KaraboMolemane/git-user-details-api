@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemon": "3.0.1"
+    "body-parser": "1.20.2",
+    "nodemon": "3.0.1",
+    "octokit": "3.1.0"
   },
   "devDependencies": {
     "chai": "4.3.8",

@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     if(userWord !== ''){
-      const apiKey = 'a38b9950-2c3e-446c-94bd-02c7c25cbf22';
+      const apiKey = 'XXX';
       const apiURL = 'https://www.dictionaryapi.com/api/v3/references/collegiate/json/'.concat(userWord,'?key=',apiKey);
 
       //Do the API call
@@ -38,7 +38,7 @@ function App() {
   if (error) {
     results =  <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    results = <div>{userWord === ''? 'Enter a word above and click "Get Definition"' : 'Loading...'}</div>;
+    results = <div>{userWord === ''? 'Enter text above to search.' : 'Loading...'}</div>;
   } else {
     //Get the appropriate information from the data recieved
     //https://www.dictionaryapi.com/products/json#sec-2.uns
@@ -65,20 +65,24 @@ function App() {
     <div className="container my-5">
     <div className="p-5 text-center bg-body-tertiary rounded-3">
         <br />
-        <h1 className="text-body-emphasis">Dictionary</h1>
+        <h1 className="text-body-emphasis">Search GitHub User App</h1>
         <p className="col-lg-8 mx-auto fs-5 text-muted">
-          This dictionary application allows you to enter a word and it will show you the definition and the example usage. Go ahead and try it!
+          This app allows you to search for GitHub users and see the following:
         </p>
+        <ul className='list-unstyled'>
+          <li>User details - including some of their repos, their profile picture, bio, etc.</li>
+          <li>Repo details - including last commit date, creation date, description, etc.</li>
+        </ul>
         <div className="bd-example">
       <form>
         <div className="w-50 p-3" style={{marginLeft: '30%'}} >
-          <input type="text" className="form-control d-inline-flex align-items-center" id="userInputWord" aria-describedby="emailHelp" placeholder='Type a word here to get the definition'/>          
+          <input type="text" className="form-control d-inline-flex align-items-center" id="userInputWord" aria-describedby="emailHelp" placeholder='Type in text to search for users'/>          
         </div>       
       </form>
       <br />
         <div className="d-inline-flex gap-2 mb-5">
             <button className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button" onClick={() => setUserWord(document.getElementById('userInputWord').value)}>
-                Get definition
+                Search
             </button>
         </div>
       <h4 className='text-uppercase'>{userWord}</h4>
