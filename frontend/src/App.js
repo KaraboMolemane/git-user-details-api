@@ -9,17 +9,17 @@ function App() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
-  const [userWord, setUserWord] = useState('');
+  const [searchText, setSearchText] = useState('');
 
 
   useEffect(() => {
-    if(userWord !== ''){
-      const apiKey = 'XXX';
-      const apiURL = 'https://www.dictionaryapi.com/api/v3/references/collegiate/json/'.concat(userWord,'?key=',apiKey);
+    if(searchText !== ''){
 
       //Do the API call
-      fetch(apiURL)
-        .then(res => res.json())
+      fetch('/search-users/' + searchText)
+      //fetch('https://api.github.com/search/users?q=karabo in:name type:user')
+         .then(res => res.json())
+        //.then(res => console.log('res:', res))
         .then(
           (result) => {
             setIsLoaded(true);
@@ -32,33 +32,24 @@ function App() {
         )
     }
 
-  }, [userWord])
+  }, [searchText])
 
   let results = '';
   if (error) {
     results =  <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    results = <div>{userWord === ''? 'Enter text above to search.' : 'Loading...'}</div>;
+    results = <div>{searchText === ''? 'Enter text above to search.' : 'Loading...'}</div>;
   } else {
-    //Get the appropriate information from the data recieved
-    //https://www.dictionaryapi.com/products/json#sec-2.uns
-    console.log('items:', items);
-    const  def = items && items[0].shortdef[0];
-    let usage = '';
-    try {
-      //https://bobbyhadz.com/blog/javascript-check-if-array-index-exists#check-if-an-index-exists-in-a-nested-array-using-trycatch
-      if(items[4].def[0].sseq[0][0][1].dt[2][1][0].t !== undefined) usage = items[4].def[0].sseq[0][0][1].dt[2][1][0].t;
-    } catch (error) {
-      usage = 'No usage avalable'
-    }
 
-    results = (
+    console.log('items:', items);
+
+    /*results = (
       <>
         <h6>Definition: <span style={{fontWeight: 'normal'}}>{def}</span></h6>
         <h6>Usage: <span style={{fontWeight: 'normal'}}>{usage}</span></h6>
       </>
 
-    );
+    );*/
   }
 
   return (
@@ -81,11 +72,11 @@ function App() {
       </form>
       <br />
         <div className="d-inline-flex gap-2 mb-5">
-            <button className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button" onClick={() => setUserWord(document.getElementById('userInputWord').value)}>
+            <button className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button" onClick={() => setSearchText(document.getElementById('userInputWord').value)}>
                 Search
             </button>
         </div>
-      <h4 className='text-uppercase'>{userWord}</h4>
+      <h4 className='text-uppercase'>{searchText}</h4>
       <span>{results}</span>
       </div>
 
