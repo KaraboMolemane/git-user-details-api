@@ -63,84 +63,59 @@ function App() {
   //   { id: 0, title: 'Example' },
   //   { id: 1, title: 'Demo' },
   //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' }
+
 
   // ];
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', 
+      headerName: 'ID', 
+      width: 150
+    },
     {
-      field: 'firstName',
-      headerName: 'First name',
+      field: 'login',
+      headerName: 'User name',
+      width: 350,
+
+    },
+    {
+      field: 'details',
+      headerName: 'User details',
       width: 150,
-      editable: true,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 110,
-      editable: true,
-    },
-    {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+
     },
   ];
   
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+  // const rows = [
+  //   { id: 1, login: 'Snow', details: 'Jon',},
+  //   { id: 2, login: 'Lannister', details: 'Cersei'},
+  //   { id: 3, login: 'Lannister', details: 'Jaime'},
+  //   { id: 4, login: 'Stark', details: 'Arya'},
+  //   { id: 5, login: 'Targaryen', details: 'Daenerys'},
+  //   { id: 6, login: 'Melisandre', details: null },
+  //   { id: 7, login: 'Clifford', details: 'Ferrara' },
+  //   { id: 8, login: 'Frances', details: 'Rossini'},
+  //   { id: 9, login: 'Roxie', details: 'Harvey'},
+  // ];
 
+  let rows = [];
+  items.forEach(element => {
+      rows.push({
+      id: element.id, 
+      login: element.login, 
+      details: element.url
+    })
+  })
+
+
+//Implement event for cellClick
+// const handleRowClick = (params) => {
+//   console.log('Well, you clicked Row:', params);
+// };
+
+const handleCellClick = (params) => {
+  console.log('Well, you clicked the Cell:', params);
+};
 
   useEffect(() => {
     if(searchText !== ''){
@@ -153,7 +128,7 @@ function App() {
         .then(
           (result) => {
             setIsLoaded(true);
-            setItems(result);
+            setItems(result.items);
           },
           (error) => {
             setIsLoaded(true);
@@ -213,6 +188,8 @@ function App() {
       {/*<DataGrid columns={columns} rows={rows} />*/}
       <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
+        //onRowClick={handleRowClick}
+        onCellClick={handleCellClick}
         rows={rows}
         columns={columns}
         initialState={{
@@ -233,3 +210,9 @@ function App() {
 }
 
 export default App;
+
+/*
+USEFUL Links 
+https://mui.com/x/react-data-grid/style/
+https://mui.com/x/react-data-grid/style/
+*/
