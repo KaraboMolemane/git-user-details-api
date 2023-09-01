@@ -70,19 +70,22 @@ function App() {
   const columns = [
     { field: 'id', 
       headerName: 'ID', 
-      width: 150
+      width: 150,
+      flex: 1
     },
     {
       field: 'login',
       headerName: 'User name',
       width: 350,
+      flex: 2
 
     },
     {
       field: 'details',
       headerName: 'User details',
       width: 150,
-
+      flex: 1,
+      cellClassName: 'user-details--cell',
     },
   ];
   
@@ -103,7 +106,8 @@ function App() {
       rows.push({
       id: element.id, 
       login: element.login, 
-      details: element.url
+      details: 'See more'
+      // details: element.url
     })
   })
 
@@ -186,7 +190,16 @@ const handleCellClick = (params) => {
       <span>{results}</span>
       </div>
       {/*<DataGrid columns={columns} rows={rows} />*/}
-      <Box sx={{ height: 400, width: '100%' }}>
+      <Box sx={{ 
+        height: 400, 
+        width: '100%', 
+        '& .user-details--cell': {
+          // make column look like a link
+          color: 'blue',
+          textDecoration: 'underline',
+          cursor: 'pointer',
+        }
+        }}>
       <DataGrid
         //onRowClick={handleRowClick}
         onCellClick={handleCellClick}
