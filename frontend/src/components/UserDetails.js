@@ -1,6 +1,15 @@
 import { useState } from 'react';
 
 function UserDetails(){
+  const queryString = window.location.search;
+  console.log(queryString);
+  const searchParams = new URLSearchParams(queryString);
+
+  // Iterating the search parameters
+  for (const p of searchParams) {
+    console.log(p);
+  }
+
     return(
         <div className="col">
             <div className="card">
