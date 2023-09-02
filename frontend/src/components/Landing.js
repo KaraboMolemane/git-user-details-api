@@ -119,8 +119,9 @@ function Landing() {
 
 const handleCellClick = (params) => {
   console.log('Well, you clicked the Cell:', params);
-  //reroute if cell cointains "see more"
-  window.location.href = '/user-details?name=Karabo';
+  // Only reroute if the user clicks on the the details column cell 
+  // if(params.field === 'details') console.log('Route:', params.row.login);
+   if(params.field === 'details') window.location.href = '/user-details?login='+params.row.login;
 };
 
   useEffect(() => {
@@ -154,13 +155,6 @@ const handleCellClick = (params) => {
 
     console.log('items:', items);
 
-    /*results = (
-      <>
-        <h6>Definition: <span style={{fontWeight: 'normal'}}>{def}</span></h6>
-        <h6>Usage: <span style={{fontWeight: 'normal'}}>{usage}</span></h6>
-      </>
-
-    );*/
   }
 
 
@@ -191,7 +185,6 @@ const handleCellClick = (params) => {
                 Search
             </button>
         </div>
-      <h4 className='text-uppercase'>{searchText}</h4>
       <span>{results}</span>
       </div>
       {/*<DataGrid columns={columns} rows={rows} />*/}
