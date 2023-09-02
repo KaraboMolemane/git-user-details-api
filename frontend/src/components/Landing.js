@@ -81,6 +81,13 @@ function Landing() {
 
     },
     {
+        field: 'url',
+        headerName: 'URL',
+        width: 350,
+        flex: 2
+  
+    },
+    {
       field: 'details',
       headerName: 'User details',
       width: 150,
@@ -106,8 +113,8 @@ function Landing() {
       rows.push({
       id: element.id, 
       login: element.login, 
+      url: element.url,
       details: 'See more'
-      // details: element.url
     })
   })
 
@@ -121,7 +128,7 @@ const handleCellClick = (params) => {
   console.log('Well, you clicked the Cell:', params);
   // Only reroute if the user clicks on the the details column cell 
   // if(params.field === 'details') console.log('Route:', params.row.login);
-   if(params.field === 'details') window.location.href = '/user-details?login='+params.row.login;
+   if(params.field === 'details') window.location.href = '/user-details?userurl='+params.row.url;
 };
 
   useEffect(() => {
@@ -166,9 +173,6 @@ const handleCellClick = (params) => {
         <p className="col-lg-8 mx-auto fs-5 text-muted">
           This app allows you to search for GitHub users and see the following:
         </p>
-        <nav>
-        <Link to="/user-details">User Details</Link>
-        </nav>
         <ul className='list-unstyled'>
           <li>User details - including some of their repos, their profile picture, bio, etc.</li>
           <li>Repo details - including last commit date, creation date, description, etc.</li>
@@ -180,14 +184,28 @@ const handleCellClick = (params) => {
         </div>       
       </form>
       <br />
+      <div>{results}</div>      <br />
         <div className="d-inline-flex gap-2 mb-5">
-            <button className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button" onClick={() => setSearchText(document.getElementById('userInputWord').value)}>
-                Search
-            </button>
+
+            <button type="button" className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen" onClick={() => setSearchText(document.getElementById('userInputWord').value)}>
+            Search
+          </button>
         </div>
-      <span>{results}</span>
+      
       </div>
-      {/*<DataGrid columns={columns} rows={rows} />*/}
+      
+    </div>
+    
+    {/* Modal for API results  */}
+    <div className="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true">
+  <div className="modal-dialog modal-fullscreen">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h1 className="modal-title fs-4" id="exampleModalFullscreenLabel">Search results for "{searchText}"</h1>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div className="modal-body">
+        {/*<DataGrid columns={columns} rows={rows} />*/}
       <Box sx={{ 
         height: 400, 
         width: '100%', 
@@ -215,7 +233,15 @@ const handleCellClick = (params) => {
         disableRowSelectionOnClick
       />
     </Box>
+      </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+
+
 </div>
 );
 }
@@ -226,4 +252,5 @@ export default Landing;
 USEFUL Links 
 https://mui.com/x/react-data-grid/style/
 https://www.sitepoint.com/get-url-parameters-with-javascript/
+https://stackoverflow.com/questions/45898789/react-router-pass-param-to-component
 */
