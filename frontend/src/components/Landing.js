@@ -6,8 +6,6 @@ import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faBook } from '@fortawesome/free-solid-svg-icons';
-import { Link  } from 'react-router-dom';
-
 
 function Landing() {
   //declare state(s)
@@ -44,25 +42,7 @@ function Landing() {
   //   { id: 1, title: 'Demo' },
   //   { id: 0, title: 'Example' },
   //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
+
 
 
   // ];
@@ -128,7 +108,7 @@ const handleCellClick = (params) => {
   console.log('Well, you clicked the Cell:', params);
   // Only reroute if the user clicks on the the details column cell 
   // if(params.field === 'details') console.log('Route:', params.row.login);
-   if(params.field === 'details') window.location.href = '/user-details?userurl='+params.row.url;
+   if(params.field === 'details') window.location.href = '/user-details?login='+params.row.login;
 };
 
   useEffect(() => {

@@ -1,15 +1,14 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const fs = require('fs');
-const bodyParser = require('body-parser');
+const fs = require("fs");
+const bodyParser = require("body-parser");
 const helmet = require("helmet");
 // import { Octokit } from "octokit";
 const { Octokit, App } = require("octokit");
 
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-const API_BASE_URL = 'https://api.github.com/'
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+const API_BASE_URL = "https://api.github.com/";
 
 // Use Helmet!
 app.use(helmet());
@@ -26,62 +25,72 @@ app.use(helmet());
 //       repo: "git-user-details-api",
 //       per_page: 2,
 //     });
-  
+
 //     console.log(`Success! Status: ${result.status}. Rate limit remaining: ${result.headers["x-ratelimit-remaining"]}`)
-  
+
 //   } catch (error) {
 //     console.log(`Error! Status: ${error.status}. Rate limit remaining: ${error.headers["x-ratelimit-remaining"]}. Message: ${error.response.data.message}`)
 //   }
 
 app.get("/", (req, res) => {
-    res.send("Hello world! Our app is now wearing a Helmet for security reasons.");
+  res.send(
+    "Hello world! Our app is now wearing a Helmet for security reasons."
+  );
 });
 
-app.get('/search-users/:query', function (req, res) {
+app.get("/search-users/:query", function (req, res) {
   const queryParam = req.params.query;
-  const query = 'siddhant';
-  const target = 'name';
-  const type = 'user';
-  const aprUrl = API_BASE_URL.concat('search/users?q=', queryParam, ' in:', target, ' type:', type );
-  console.log('aprUrl:', aprUrl);
+  const query = "siddhant";
+  const target = "name";
+  const type = "user";
+  const aprUrl = API_BASE_URL.concat(
+    "search/users?q=",
+    queryParam,
+    " in:",
+    target,
+    " type:",
+    type
+  );
+  console.log("aprUrl:", aprUrl);
 
   fetch(aprUrl)
-  .then(res => res.json())
-  .then(
-    (result) => {
-    // console.log(typeof(result));
-    console.log(result);
-    res.send(result);
-    },
-    (error) => {            
-      // console.log(error);
-      res.send(error);
-    }
-  )  
-})
-
-app.get('/get-user', function (req, res) {
-  console.log('Ons is hier');
-  console.log(res);
-  fetch('https://api.github.com/users/fuzzysid')
-    .then(res => res.json())
+    .then((res) => res.json())
     .then(
       (result) => {
-      console.log(result)
+        // console.log(typeof(result));
+        console.log(result);
+        res.send(result);
       },
-      (error) => {            
-        console.log(error)
+      (error) => {
+        // console.log(error);
+        res.send(error);
       }
-    )
-})
+    );
+});
 
-
+app.get("/get-user-details/:login", function (req, res) {
+  const login = req.params.login;
+  const aprUrl = API_BASE_URL.concat("users/", login);
+  console.log("aprUrl:", aprUrl);
+  fetch(aprUrl)
+    .then((res) => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        res.send(result);
+      },
+      (error) => {
+        // console.log(error);
+        res.send(error);
+      }
+    );
+});
 
 app.listen(8080, function () {
-    console.log('Example app listening on port 8080!')
-})
+  console.log("Example app listening on port 8080!");
+});
 
-app.get('*', function(req, res, next) {
+app.get("*", function (req, res, next) {
   let err = new Error("Sorry! Can't find that resource. Please check your URL");
   err.statusCode = 404;
   next(err);
