@@ -76,18 +76,6 @@ function Landing() {
     },
   ];
   
-  // const rows = [
-  //   { id: 1, login: 'Snow', details: 'Jon',},
-  //   { id: 2, login: 'Lannister', details: 'Cersei'},
-  //   { id: 3, login: 'Lannister', details: 'Jaime'},
-  //   { id: 4, login: 'Stark', details: 'Arya'},
-  //   { id: 5, login: 'Targaryen', details: 'Daenerys'},
-  //   { id: 6, login: 'Melisandre', details: null },
-  //   { id: 7, login: 'Clifford', details: 'Ferrara' },
-  //   { id: 8, login: 'Frances', details: 'Rossini'},
-  //   { id: 9, login: 'Roxie', details: 'Harvey'},
-  // ];
-
   let rows = [];
   items.forEach(element => {
       rows.push({
@@ -99,13 +87,7 @@ function Landing() {
   })
 
 
-//Implement event for cellClick
-// const handleRowClick = (params) => {
-//   console.log('Well, you clicked Row:', params);
-// };
-
 const handleCellClick = (params) => {
-  console.log('Well, you clicked the Cell:', params);
   // Only reroute if the user clicks on the the details column cell 
   // if(params.field === 'details') console.log('Route:', params.row.login);
    if(params.field === 'details') window.location.href = '/user-details?login='+params.row.login;
