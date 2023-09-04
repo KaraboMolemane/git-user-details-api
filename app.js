@@ -86,6 +86,24 @@ app.get("/get-user-details/:login", function (req, res) {
     );
 });
 
+app.get("/get-user-repos/:login", function (req, res) {
+  const login = req.params.login;
+  const aprUrl = API_BASE_URL.concat("users/", login, "/repos");
+  console.log("aprUrl:", aprUrl);
+  fetch(aprUrl)
+    .then((res) => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        res.send(result);
+      },
+      (error) => {
+        // console.log(error);
+        res.send(error);
+      }
+    );
+});
+
 app.listen(8080, function () {
   console.log("Example app listening on port 8080!");
 });

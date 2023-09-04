@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "react-data-grid/lib/styles.css";
 //import DataGrid from 'react-data-grid';
 import * as React from "react";
@@ -13,21 +13,60 @@ function UserDetails() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [repos, setRepos] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   const queryString = window.location.search;
   console.log("queryString", queryString);
   const searchParams = new URLSearchParams(queryString);
+  const userLogin = useRef(searchParams.get("login"));
+  console.log("userLogin:", userLogin);
 
-  // Iterating the search parameters
-  for (const p of searchParams) {
-    console.log(p);
-  }
+  const columns = [
+    { field: "id", headerName: "ID", width: 150, flex: 1 },
+    {
+      field: "name",
+      headerName: "Repo name",
+      width: 350,
+      flex: 2,
+    },
+    {
+      field: "url",
+      headerName: "URL",
+      width: 350,
+      flex: 2,
+    },
+    {
+      field: "details",
+      headerName: "Repo details",
+      width: 150,
+      flex: 1,
+      cellClassName: "details--cell",
+    },
+  ];
+
+
+  let rows = [];
+  repos.forEach(element => {
+      rows.push({
+      id: element.id, 
+      name: element.name, 
+      url: element.html_url,
+      details: 'See more'
+    })
+  })
+
+  const handleCellClick = (params) => {
+    console.log("Well, you clicked the Cell:", params);
+    // Only reroute if the user clicks on the the details column cell
+    // if(params.field === 'details') console.log('Route:', params.row.login);
+    if (params.field === "details")
+      window.location.href = "/user-details?login=" + params.row.login;
+  };
 
   useEffect(() => {
-    //Do the API call
-    // fetch('/search-users-details/' + searchText)
-    fetch("/get-user-details/fuzzysid")
+    //Do the API call - user details
+    fetch("/get-user-details/" + userLogin.current)
       .then((res) => res.json())
       //.then(res => console.log('res:', res))
       .then(
@@ -35,6 +74,22 @@ function UserDetails() {
           setIsLoaded(true);
           console.log("user details:", result);
           setItems(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+
+    //Do the API call - user repos
+    fetch("/get-user-repos/" + userLogin.current)
+      .then((res) => res.json())
+      //.then(res => console.log('res:', res))
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          console.log("user details:", result);
+          setRepos(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -59,52 +114,94 @@ function UserDetails() {
             </div>
             <div className="col-md-8">
               <div className="card-body">
+                {/* User details */}
                 <h5 className="card-title">Name: {items.name} </h5>
                 <div class="bd-example-snippet bd-code-snippet">
                   <div class="bd-example">
                     <table class="table table-hover">
                       <tbody>
-                        <tr class="table-secondary">
-                          <th scope="row">Username</th>
+                        <tr class="table-light">
+                          <th scope="row">Username:</th>
                           <td>{items.login}</td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Bio</th>
+                        <tr class="table-light">
+                          <th scope="row">Bio:</th>
                           <td>{items.bio}</td>
                         </tr>
-                        <tr class="table-secondary">
+                        <tr class="table-light">
                           <th scope="row">GitHub Url:</th>
-                          <td><a href={items.html_url} target='_blank'>{items.html_url}</a> <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></td>
+                          <td>
+                            <a href={items.html_url} target="_blank">
+                              {items.html_url}
+                            </a>{" "}
+                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                          </td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Company</th>
+                        <tr class="table-light">
+                          <th scope="row">Company:</th>
                           <td>{items.company} </td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Location</th>
+                        <tr class="table-light">
+                          <th scope="row">Location:</th>
                           <td>{items.location}</td>
                         </tr>
-                        <tr class="table-secondary">
+                        <tr class="table-light">
                           <th scope="row">Blog</th>
-                          <td><a href={items.blog} target='_blank'>{items.blog}</a> <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></td>
+                          <td>
+                            <a href={items.blog} target="_blank">
+                              {items.blog}
+                            </a>{" "}
+                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                          </td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Email</th>
+                        <tr class="table-light">
+                          <th scope="row">Email:</th>
                           <td>{items.email}</td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Followers</th>
+                        <tr class="table-light">
+                          <th scope="row">Followers:</th>
                           <td>{items.followers}</td>
                         </tr>
-                        <tr class="table-secondary">
-                          <th scope="row">Following</th>
+                        <tr class="table-light">
+                          <th scope="row">Following:</th>
                           <td> {items.following}</td>
                         </tr>
-
-
                       </tbody>
                     </table>
                   </div>
+                </div>
+                <div>
+                  {/* user repos */}
+                  <h6>Repos</h6>
+                  <Box
+                    sx={{
+                      height: 400,
+                      width: "100%",
+                      "& .details--cell": {
+                        // make column look like a link
+                        color: "blue",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      },
+                    }}
+                  >
+                    <DataGrid
+                      //onRowClick={handleRowClick}
+                      onCellClick={handleCellClick}
+                      rows={rows}
+                      columns={columns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[5]}
+                      checkboxSelection
+                      disableRowSelectionOnClick
+                    />
+                  </Box>
                 </div>
                 <p className="card-text">
                   <small className="text-muted">
