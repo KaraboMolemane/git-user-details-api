@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import Header from "./Header";
+import { Modal, Button } from "react-bootstrap";
 
 function UserDetails() {
   //declare state(s)
@@ -14,7 +15,10 @@ function UserDetails() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [repos, setRepos] = useState([]);
-  const [searchText, setSearchText] = useState("");
+  const [showModal, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const queryString = window.location.search;
   console.log("queryString", queryString);
@@ -116,19 +120,19 @@ function UserDetails() {
               <div className="card-body">
                 {/* User details */}
                 <h5 className="card-title">Name: {items.name} </h5>
-                <div class="bd-example-snippet bd-code-snippet">
-                  <div class="bd-example">
-                    <table class="table table-hover">
+                <div className="bd-example-snippet bd-code-snippet">
+                  <div className="bd-example">
+                    <table className="table table-hover">
                       <tbody>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Username:</th>
                           <td>{items.login}</td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Bio:</th>
                           <td>{items.bio}</td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">GitHub Url:</th>
                           <td>
                             <a href={items.html_url} target="_blank">
@@ -137,15 +141,15 @@ function UserDetails() {
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                           </td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Company:</th>
                           <td>{items.company} </td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Location:</th>
                           <td>{items.location}</td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Blog</th>
                           <td>
                             <a href={items.blog} target="_blank">
@@ -154,15 +158,15 @@ function UserDetails() {
                             <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
                           </td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Email:</th>
                           <td>{items.email}</td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Followers:</th>
                           <td>{items.followers}</td>
                         </tr>
-                        <tr class="table-light">
+                        <tr className="table-light">
                           <th scope="row">Following:</th>
                           <td> {items.following}</td>
                         </tr>
@@ -215,6 +219,32 @@ function UserDetails() {
             </div>
           </div>
         </div>
+        {/* 
+        React Modal for repo details  
+        https://www.pluralsight.com/guides/how-to-trigger-modal-for-react-bootstrap
+        */}
+        <div
+        className="d-flex align-items-center justify-content-center"
+        style={{ height: "100vh" }}
+      >
+        <Button variant="primary" onClick={handleShow}>
+          Launch demo modal
+        </Button>
+      </div>
+      <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
     </>
   );
