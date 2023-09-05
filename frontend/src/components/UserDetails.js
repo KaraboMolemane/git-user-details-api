@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import "react-data-grid/lib/styles.css";
-//import DataGrid from 'react-data-grid';
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
@@ -15,6 +14,8 @@ function UserDetails() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [repos, setRepos] = useState([]);
+  const [activeRepo, setActiveRepo] = useState([]);
+  const [activeCommits, setActiveCommits] = useState([]);
   const [showModal, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -49,23 +50,90 @@ function UserDetails() {
     },
   ];
 
-
   let rows = [];
-  repos.forEach(element => {
+  if (repos.length !== 0) {
+    repos.forEach((element) => {
       rows.push({
-      id: element.id, 
-      name: element.name, 
-      url: element.html_url,
-      details: 'See more'
-    })
-  })
+        id: element.id,
+        name: element.name,
+        url: element.html_url,
+        details: "See more",
+      });
+    });
+  }
+
+  const modalColumns = [
+    { field: "id", headerName: "ID", width: 150, flex: 1 },
+    {
+      field: "message",
+      headerName: "Commit message",
+      width: 350,
+      flex: 2,
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      width: 350,
+      flex: 2,
+    },
+    {
+      field: "url",
+      headerName: "URL",
+      width: 150,
+      flex: 1,
+      cellClassName: "details--cell",
+    },
+  ];
+
+  let modalRows = [];
 
   const handleCellClick = (params) => {
-    console.log("Well, you clicked the Cell:", params);
-    // Only reroute if the user clicks on the the details column cell
-    // if(params.field === 'details') console.log('Route:', params.row.login);
-    if (params.field === "details")
-      window.location.href = "/user-details?login=" + params.row.login;
+    if (params.field === "details") {
+      //Do the API call - repo details
+      fetch("/get-repo-details/" + userLogin.current + "/" + params.row.name)
+        .then((res) => res.json())
+        //.then(res => console.log('res:', res))
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            console.log("repo details:", result);
+            setActiveRepo(result);
+            // show modal for repo details
+            handleShow();
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        );
+
+      //Do the API call - repo commits
+      fetch("/get-repo-commits/" + userLogin.current + "/" + params.row.name)
+        .then((res) => res.json())
+        //.then(res => console.log('res:', res))
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            console.log("Repo commits:", result);
+            setActiveCommits(result);
+            // Set data for grid
+            if (activeRepo.length !== 0) {
+              activeRepo.forEach((element) => {
+                rows.push({
+                  id: element.sha,
+                  message: element.message,
+                  url: element.html_url,
+                  details: "See more",
+                });
+              });
+            }
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        );
+    }
   };
 
   useEffect(() => {
@@ -92,7 +160,7 @@ function UserDetails() {
       .then(
         (result) => {
           setIsLoaded(true);
-          console.log("user details:", result);
+          console.log("user repos:", result);
           setRepos(result);
         },
         (error) => {
@@ -115,6 +183,15 @@ function UserDetails() {
                 src={items.avatar_url}
                 alt="User_profile_pic"
               />
+              <br />
+              <p className="card-text">
+                <small className="text-muted">
+                  {items.name} joined GitHub on {items.created_at}
+                </small>
+              </p>
+              <a href="/" className="btn btn-primary">
+                Back to Homepage
+              </a>
             </div>
             <div className="col-md-8">
               <div className="card-body">
@@ -190,7 +267,6 @@ function UserDetails() {
                     }}
                   >
                     <DataGrid
-                      //onRowClick={handleRowClick}
                       onCellClick={handleCellClick}
                       rows={rows}
                       columns={columns}
@@ -207,14 +283,6 @@ function UserDetails() {
                     />
                   </Box>
                 </div>
-                <p className="card-text">
-                  <small className="text-muted">
-                    {items.name} joined GitHub on {items.created_at}
-                  </small>
-                </p>
-                <a href="/" className="btn btn-primary">
-                  Back to Homepage
-                </a>
               </div>
             </div>
           </div>
@@ -223,28 +291,86 @@ function UserDetails() {
         React Modal for repo details  
         https://www.pluralsight.com/guides/how-to-trigger-modal-for-react-bootstrap
         */}
-        <div
-        className="d-flex align-items-center justify-content-center"
-        style={{ height: "100vh" }}
-      >
-        <Button variant="primary" onClick={handleShow}>
-          Launch demo modal
-        </Button>
-      </div>
-      <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        <Modal show={showModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Repo details</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="bd-example">
+              <table className="table table-hover">
+                <tbody>
+                  <tr className="table-light">
+                    <th scope="row">Name:</th>
+                    <td>{activeRepo && activeRepo.name}</td>
+                  </tr>
+                  <tr className="table-light">
+                    <th scope="row">Description:</th>
+                    <td>{activeRepo && activeRepo.description}</td>
+                  </tr>
+                  <tr className="table-light">
+                    <th scope="row">Url:</th>
+                    <td>
+                      <a
+                        href={activeRepo && activeRepo.html_url}
+                        target="_blank"
+                      >
+                        {activeRepo && activeRepo.html_url}
+                      </a>{" "}
+                      <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                    </td>
+                  </tr>
+                  <tr className="table-light">
+                    <th scope="row">Owner:</th>
+                    <td>
+                      {activeRepo && activeRepo.owner && activeRepo.owner.login}{" "}
+                    </td>
+                  </tr>
+                  <tr className="table-light">
+                    <th scope="row">Creation Date:</th>
+                    <td>{activeRepo && activeRepo.created_at}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              {/* repo commits */}
+              <h6>Commits</h6>
+              <Box
+                sx={{
+                  height: 400,
+                  width: "100%",
+                  "& .details--cell": {
+                    // make column look like a link
+                    color: "blue",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <DataGrid
+                  onCellClick={handleCellClick}
+                  rows={modalRows}
+                  columns={modalColumns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[5]}
+                  checkboxSelection
+                  disableRowSelectionOnClick
+                />
+              </Box>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );

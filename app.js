@@ -104,6 +104,45 @@ app.get("/get-user-repos/:login", function (req, res) {
     );
 });
 
+app.get("/get-repo-details/:login/:repo", function (req, res) {
+  const login = req.params.login;
+  const repo = req.params.repo;
+  console.log('req.params:', req.params)
+  const aprUrl = API_BASE_URL.concat("repos/", login, "/", repo);
+  console.log("aprUrl repo details:", aprUrl);
+  fetch(aprUrl)
+    .then((res) => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        res.send(result);
+      },
+      (error) => {
+        // console.log(error);
+        res.send(error);
+      }
+    );
+});
+
+app.get("/get-repo-commits/:login/:repo", function (req, res) {
+  const login = req.params.login;
+  const repo = req.params.repo;
+  const aprUrl = API_BASE_URL.concat("repos/", login, "/", repo, "/commits");
+  console.log("aprUrl repo commits:", aprUrl);
+  fetch(aprUrl)
+    .then((res) => res.json())
+    .then(
+      (result) => {
+        console.log('Repo commits', result);
+        res.send(result);
+      },
+      (error) => {
+        // console.log(error);
+        res.send(error);
+      }
+    );
+});
+
 app.listen(8080, function () {
   console.log("Example app listening on port 8080!");
 });
