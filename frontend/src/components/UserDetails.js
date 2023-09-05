@@ -86,6 +86,17 @@ function UserDetails() {
   ];
 
   let modalRows = [];
+  // Set data for grid
+  if (activeCommits.length !== 0) {
+    activeCommits.forEach((element) => {
+      modalRows.push({
+        id: element.sha,
+        message: element.commit.message,
+        date: element.commit.author.date,
+        url: element.html_url,
+      });
+    });
+  }
 
   const handleCellClick = (params) => {
     if (params.field === "details") {
@@ -116,17 +127,6 @@ function UserDetails() {
             setIsLoaded(true);
             console.log("Repo commits:", result);
             setActiveCommits(result);
-            // Set data for grid
-            if (activeRepo.length !== 0) {
-              activeRepo.forEach((element) => {
-                rows.push({
-                  id: element.sha,
-                  message: element.message,
-                  url: element.html_url,
-                  details: "See more",
-                });
-              });
-            }
           },
           (error) => {
             setIsLoaded(true);
@@ -134,6 +134,11 @@ function UserDetails() {
           }
         );
     }
+  };
+
+  const handleCommitCellClick = (params) => {
+    //Open commit on GitHub
+    if (params.field === "url") window.open(params.row.url, '_blank');
   };
 
   useEffect(() => {
@@ -348,7 +353,7 @@ function UserDetails() {
                 }}
               >
                 <DataGrid
-                  onCellClick={handleCellClick}
+                  onCellClick={handleCommitCellClick}
                   rows={modalRows}
                   columns={modalColumns}
                   initialState={{
