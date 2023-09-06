@@ -21,11 +21,10 @@ function UserDetails() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // get params
   const queryString = window.location.search;
-  console.log("queryString", queryString);
   const searchParams = new URLSearchParams(queryString);
   const userLogin = useRef(searchParams.get("login"));
-  console.log("userLogin:", userLogin);
 
   const columns = [
     { field: "id", headerName: "ID", width: 150, flex: 1 },
@@ -103,11 +102,9 @@ function UserDetails() {
       //Do the API call - repo details
       fetch("/get-repo-details/" + userLogin.current + "/" + params.row.name)
         .then((res) => res.json())
-        //.then(res => console.log('res:', res))
         .then(
           (result) => {
             setIsLoaded(true);
-            console.log("repo details:", result);
             setActiveRepo(result);
             // show modal for repo details
             handleShow();
@@ -121,11 +118,9 @@ function UserDetails() {
       //Do the API call - repo commits
       fetch("/get-repo-commits/" + userLogin.current + "/" + params.row.name)
         .then((res) => res.json())
-        //.then(res => console.log('res:', res))
         .then(
           (result) => {
             setIsLoaded(true);
-            console.log("Repo commits:", result);
             setActiveCommits(result);
           },
           (error) => {
@@ -145,11 +140,9 @@ function UserDetails() {
     //Do the API call - user details
     fetch("/get-user-details/" + userLogin.current)
       .then((res) => res.json())
-      //.then(res => console.log('res:', res))
       .then(
         (result) => {
           setIsLoaded(true);
-          console.log("user details:", result);
           setItems(result);
         },
         (error) => {
@@ -161,11 +154,9 @@ function UserDetails() {
     //Do the API call - user repos
     fetch("/get-user-repos/" + userLogin.current)
       .then((res) => res.json())
-      //.then(res => console.log('res:', res))
       .then(
         (result) => {
           setIsLoaded(true);
-          console.log("user repos:", result);
           setRepos(result);
         },
         (error) => {
@@ -174,6 +165,19 @@ function UserDetails() {
         }
       );
   }, []);
+
+  let results = "";
+  if (error) {
+    results = <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    results = (
+      <div>
+       Loading...
+      </div>
+    );
+  } else {
+    console.log("items:", items);
+  }
 
   return (
     <>
@@ -204,6 +208,7 @@ function UserDetails() {
                 <h5 className="card-title">Name: {items.name} </h5>
                 <div className="bd-example-snippet bd-code-snippet">
                   <div className="bd-example">
+                  <div>{results}</div>
                     <table className="table table-hover">
                       <tbody>
                         <tr className="table-light">
