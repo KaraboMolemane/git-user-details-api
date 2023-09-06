@@ -3,8 +3,6 @@ const app = express();
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
-// import { Octokit } from "octokit";
-const { Octokit, App } = require("octokit");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
