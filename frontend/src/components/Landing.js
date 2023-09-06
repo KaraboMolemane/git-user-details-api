@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import "react-data-grid/lib/styles.css";
-//import DataGrid from 'react-data-grid';
 import * as React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faBook } from '@fortawesome/free-solid-svg-icons';
+
 
 function Landing() {
   //declare state(s)
@@ -13,37 +11,6 @@ function Landing() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [searchText, setSearchText] = useState("");
-
-  // const columns = [
-  //   { key: 'id', name: 'ID' },
-  //   { key: 'title', name: 'Title' }
-  // ];
-
-  // const rows = [
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-  //   { id: 0, title: 'Example' },
-  //   { id: 1, title: 'Demo' },
-
-  // ];
 
   const columns = [
     { field: "id", headerName: "ID", width: 150, flex: 1 },
@@ -80,7 +47,6 @@ function Landing() {
 
   const handleCellClick = (params) => {
     // Only reroute if the user clicks on the the details column cell
-    // if(params.field === 'details') console.log('Route:', params.row.login);
     if (params.field === "details")
       window.location.href = "/user-details?login=" + params.row.login;
   };
@@ -89,9 +55,7 @@ function Landing() {
     if (searchText !== "") {
       //Do the API call
       fetch("/search-users/" + searchText)
-        //fetch('https://api.github.com/search/users?q=karabo in:name type:user')
         .then((res) => res.json())
-        //.then(res => console.log('res:', res))
         .then(
           (result) => {
             setIsLoaded(true);
@@ -188,7 +152,6 @@ function Landing() {
               ></button>
             </div>
             <div className="modal-body">
-              {/*<DataGrid columns={columns} rows={rows} />*/}
               <Box
                 sx={{
                   height: 400,
@@ -202,7 +165,6 @@ function Landing() {
                 }}
               >
                 <DataGrid
-                  //onRowClick={handleRowClick}
                   onCellClick={handleCellClick}
                   rows={rows}
                   columns={columns}

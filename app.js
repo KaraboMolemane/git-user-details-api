@@ -30,18 +30,15 @@ app.get("/search-users/:query", function (req, res) {
     " type:",
     type
   );
-  console.log("aprUrl:", aprUrl);
+
 
   fetch(aprUrl)
     .then((res) => res.json())
     .then(
       (result) => {
-        // console.log(typeof(result));
-        console.log(result);
         res.send(result);
       },
       (error) => {
-        // console.log(error);
         res.send(error);
       }
     );
@@ -50,16 +47,14 @@ app.get("/search-users/:query", function (req, res) {
 app.get("/get-user-details/:login", function (req, res) {
   const login = req.params.login;
   const aprUrl = API_BASE_URL.concat("users/", login);
-  console.log("aprUrl:", aprUrl);
   fetch(aprUrl)
     .then((res) => res.json())
     .then(
-      (result) => {
-        console.log(result);
+      (result) => {;
         res.send(result);
       },
       (error) => {
-        // console.log(error);
+        console.log(error);
         res.send(error);
       }
     );
@@ -68,16 +63,14 @@ app.get("/get-user-details/:login", function (req, res) {
 app.get("/get-user-repos/:login", function (req, res) {
   const login = req.params.login;
   const aprUrl = API_BASE_URL.concat("users/", login, "/repos");
-  console.log("aprUrl:", aprUrl);
   fetch(aprUrl)
     .then((res) => res.json())
     .then(
       (result) => {
-        console.log(result);
         res.send(result);
       },
       (error) => {
-        // console.log(error);
+         console.log(error);
         res.send(error);
       }
     );
@@ -86,18 +79,15 @@ app.get("/get-user-repos/:login", function (req, res) {
 app.get("/get-repo-details/:login/:repo", function (req, res) {
   const login = req.params.login;
   const repo = req.params.repo;
-  console.log('req.params:', req.params)
   const aprUrl = API_BASE_URL.concat("repos/", login, "/", repo);
-  console.log("aprUrl repo details:", aprUrl);
   fetch(aprUrl)
     .then((res) => res.json())
     .then(
       (result) => {
-        console.log(result);
         res.send(result);
       },
       (error) => {
-        // console.log(error);
+         console.log(error);
         res.send(error);
       }
     );
@@ -107,16 +97,14 @@ app.get("/get-repo-commits/:login/:repo", function (req, res) {
   const login = req.params.login;
   const repo = req.params.repo;
   const aprUrl = API_BASE_URL.concat("repos/", login, "/", repo, "/commits");
-  console.log("aprUrl repo commits:", aprUrl);
   fetch(aprUrl)
     .then((res) => res.json())
     .then(
-      (result) => {
-        console.log('Repo commits', result);
+      (result) => {;
         res.send(result);
       },
       (error) => {
-        // console.log(error);
+         console.log(error);
         res.send(error);
       }
     );
